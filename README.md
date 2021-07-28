@@ -1,4 +1,4 @@
-# Explode-爆炸记录
+# Explode-爆炸事件
 
 原理:
 
