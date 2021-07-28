@@ -1,6 +1,6 @@
-//Õı¾­ÈËË­ÈÏÕæĞ´×¢ÊÍ
-#include "Ô¤±àÒëÍ·.h"
-#include "BDSÄÚÈİ.hpp"
+//æ­£ç»äººè°è®¤çœŸå†™æ³¨é‡Š
+#include "é¢„ç¼–è¯‘å¤´.h"
+#include "BDSå†…å®¹.hpp"
 #include <fstream>
 #include<direct.h>
 #include <io.h>
@@ -59,21 +59,21 @@ namespace Log
 		{
 			switch (v)
 			{
-			case 0: return u8"Ö÷ÊÀ½ç";
-			case 1: return u8"µØÓü";
-			case 2: return u8"Ä©µØ";
+			case 0: return u8"ä¸»ä¸–ç•Œ";
+			case 1: return u8"åœ°ç‹±";
+			case 2: return u8"æœ«åœ°";
 			}
-			return u8"Î´ÖªÎ¬¶È";
+			return u8"æœªçŸ¥ç»´åº¦";
 		}
 
 		auto ExplodePower(int v)
 		{ 			
 			switch (v)
 			{
-			case 3:return u8"¿àÁ¦ÅÂ";
+			case 3:return u8"è‹¦åŠ›æ€•";
 			case 4:return u8"TNT";
 		//	case 5:return "";
-			case 6:return u8"Ë®¾§»òÉÁµç¿àÁ¦ÅÂ";
+			case 6:return u8"æ°´æ™¶æˆ–é—ªç”µè‹¦åŠ›æ€•";
 			}
 			return "unknow";
 		}
@@ -85,7 +85,7 @@ namespace Log
 		{
 			std::ofstream File;
 			File.open("Plugin/Log/All/OnLevelExplode.log", std::ofstream::app);	
-			File << Log::Helper::Title(title) << " " << player_name << u8" ÔÚ " << Log::Helper::Dimension(dimension_1) << Log::Helper::Pos(v) << operation << Log::Helper::Dimension(dimension_2) << "(" << x << "," << y << "," << z << u8") µÄ " << Log::Helper::ExplodePower(explodepower) << u8" ²¢ÊÜµ½ÉËº¦" << std::endl;
+			File << Log::Helper::Title(title) << " " << player_name << u8" åœ¨ " << Log::Helper::Dimension(dimension_1) << Log::Helper::Pos(v) << operation << Log::Helper::Dimension(dimension_2) << "(" << x << "," << y << "," << z << u8") çš„ " << Log::Helper::ExplodePower(explodepower) << u8" å¹¶å—åˆ°ä¼¤å®³" << std::endl;
 		}
 
 	}
@@ -102,7 +102,7 @@ THook(bool, MSSYM_B1QA7explodeB1AA5LevelB2AAE20UEAAXAEAVBlockSourceB2AAA9PEAVAct
 {
 	explode_flag = 1;
 	explode_dimensionid = a3->getDimensionId();
-	//¡ıÓÖ²»ÊÇ²»ÄÜÓÃ
+	//â†“åˆä¸æ˜¯ä¸èƒ½ç”¨
 	explode_power = a5;
 	explode_pos_x = a3->getPos()->x;
 	explode_pos_y = a3->getPos()->y;
@@ -114,7 +114,7 @@ THook(bool, MSSYM_B1QA7explodeB1AA5LevelB2AAE20UEAAXAEAVBlockSourceB2AAA9PEAVAct
 	const std::string& title = "";
 	std::ofstream File;
 	File.open("Plugin/Log/All/OnLevelExplode.log", std::ofstream::app);
-	File << Log::Helper::Title(title) << " " << Log::Helper::ExplodePower(a5) << u8" ÔÚ " << Log::Helper::Dimension(a3->getDimensionId()) << "(" << x << "," << y << "," << z << u8") ±¬Õ¨" << std::endl;
+	File << Log::Helper::Title(title) << " " << Log::Helper::ExplodePower(a5) << u8" åœ¨ " << Log::Helper::Dimension(a3->getDimensionId()) << "(" << x << "," << y << "," << z << u8") çˆ†ç‚¸" << std::endl;
 	return original(_this, bs, a3, pos, a5, a6, a7, a8, a9);
 }
 
@@ -125,10 +125,10 @@ THook(bool, MSSYM_B2QUA4hurtB1AA3MobB2AAA4MEAAB1UE22NAEBVActorDamageSourceB2AAA1
 	{
 		float x1 = _this->getPos()->x, y1 = _this->getPos()->y, z1 = _this->getPos()->z;
 		float x2 = explode_pos_x, y2 = explode_pos_y, z2 = explode_pos_z;
-		int X = pow(pow(x1 - x2, 2) + pow(y1 - y2, 2) + pow(z1 - z2, 2), 0.5);//Å·ÊÏ¾àÀë
+		int X = pow(pow(x1 - x2, 2) + pow(y1 - y2, 2) + pow(z1 - z2, 2), 0.5);//æ¬§æ°è·ç¦»
 		if (X <= 5)
 		{
-			Log::Player::OnLevelExplode("", player_name, _this->getDimensionId(), _this->getPos(), u8" Òı±¬Î»ÓÚ ", explode_power, explode_dimensionid, explode_pos_x, explode_pos_y, explode_pos_z);
+			Log::Player::OnLevelExplode("", player_name, _this->getDimensionId(), _this->getPos(), u8" å¼•çˆ†ä½äº ", explode_power, explode_dimensionid, explode_pos_x, explode_pos_y, explode_pos_z);
 		}
 		
 	}	explode_flag = 0, explode_power = 0, explode_dimensionid = 0, explode_pos_x = 0, explode_pos_y = 0, explode_pos_z = 0;
@@ -138,7 +138,7 @@ THook(bool, MSSYM_B2QUA4hurtB1AA3MobB2AAA4MEAAB1UE22NAEBVActorDamageSourceB2AAA1
 void init() 
 {
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | FOREGROUND_GREEN);
-	std::cout << "[TwOnEnd] ExplodeLog Load ..." << std::endl;
+	std::cout << "[TwOnEnd-1.17.10.04] ExplodeLog Load ..." << std::endl;
 }
 
 void exit() {}
