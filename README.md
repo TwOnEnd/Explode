@@ -26,3 +26,8 @@
 
 总之很low
 求大佬改改漏判,,
+
+参考:
+-https://github.com/zhkj-liuxiaohua/mcmoddll-cpp
+
+-https://github.com/twoone-3/BDSpyrunner
