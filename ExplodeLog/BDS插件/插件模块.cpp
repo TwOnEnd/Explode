@@ -81,58 +81,31 @@ namespace Log
 
 	namespace Player
 	{
-		void OnLevelExplode(const std::string& title, const std::string& player_name, int dimension_1, Vec3* v, const std::string& operation, int explodepower,int dimension_2,int x, int y,int z)
+		void OnLevelExplode(const std::string& title,const std::string& player_name,int dimension_1,int x1,int y1,int z1,const std::string& operation,int explodepower,int dimension_2,int x2,int y2,int z2)
 		{
-			std::ofstream File;
-			File.open("Plugin/Log/All/OnLevelExplode.log", std::ofstream::app);	
-			File << Log::Helper::Title(title) << " " << player_name << u8" 在 " << Log::Helper::Dimension(dimension_1) << Log::Helper::Pos(v) << operation << Log::Helper::Dimension(dimension_2) << "(" << x << "," << y << "," << z << u8") 的 " << Log::Helper::ExplodePower(explodepower) << u8" 并受到伤害" << std::endl;
+			if (dimension_1 == dimension_2)
+			{
+				int X = pow(pow(x1 - x2, 2) + pow(y1 - y2, 2) + pow(z1 - z2, 2), 0.5);//欧氏距离
+				if (X <= 6)
+				{
+					std::ofstream File;
+					File.open("Plugin/Log/All/OnLevelExplode.log", std::ofstream::app);
+					File << Log::Helper::Title(title) << " " << player_name << u8" 在 " << Log::Helper::Dimension(dimension_1) << "(" << x1 << "," << y1 << "," << z1 << ")" << operation << Log::Helper::Dimension(dimension_2) << "(" << x2 << "," << y2 << "," << z2 << u8")的 " << Log::Helper::ExplodePower(explodepower) << std::endl;
+				}
+			}	
 		}
 
 	}
 
 }
 
-int explode_flag = 0;
-int explode_power = 0;
-int explode_dimensionid = 0;
-float explode_pos_x = 0;
-float explode_pos_y = 0;
-float explode_pos_z = 0;
 THook(bool, MSSYM_B1QA7explodeB1AA5LevelB2AAE20UEAAXAEAVBlockSourceB2AAA9PEAVActorB2AAA8AEBVVec3B2AAA1MB1UA4N3M3B1AA1Z, Level* _this, BlockSource* bs, Actor* a3, Vec3 pos, float a5, bool a6, bool a7, float a8, bool a9)
 {
-	explode_flag = 1;
-	explode_dimensionid = a3->getDimensionId();
-	//↓又不是不能用
-	explode_power = a5;
-	explode_pos_x = a3->getPos()->x;
-	explode_pos_y = a3->getPos()->y;
-	explode_pos_z = a3->getPos()->z;
-	int x = a3->getPos()->x;
-	int y = a3->getPos()->y;
-	int z = a3->getPos()->z;
-
-	const std::string& title = "";
-	std::ofstream File;
-	File.open("Plugin/Log/All/OnLevelExplode.log", std::ofstream::app);
-	File << Log::Helper::Title(title) << " " << Log::Helper::ExplodePower(a5) << u8" 在 " << Log::Helper::Dimension(a3->getDimensionId()) << "(" << x << "," << y << "," << z << u8") 爆炸" << std::endl;
-	return original(_this, bs, a3, pos, a5, a6, a7, a8, a9);
-}
-
-THook(bool, MSSYM_B2QUA4hurtB1AA3MobB2AAA4MEAAB1UE22NAEBVActorDamageSourceB2AAA1HB1UA2N1B1AA1Z, Mob* _this, VA dmsg, int a3, bool a4, bool a5)
-{
-	std::string player_name = _this->getNameTag()->c_str();
-	if (player_name != "" && explode_flag == 1)
+	for (auto& it : _this->getAllPlayers())
 	{
-		float x1 = _this->getPos()->x, y1 = _this->getPos()->y, z1 = _this->getPos()->z;
-		float x2 = explode_pos_x, y2 = explode_pos_y, z2 = explode_pos_z;
-		int X = pow(pow(x1 - x2, 2) + pow(y1 - y2, 2) + pow(z1 - z2, 2), 0.5);//欧氏距离
-		if (X <= 5)
-		{
-			Log::Player::OnLevelExplode("", player_name, _this->getDimensionId(), _this->getPos(), u8" 引爆位于 ", explode_power, explode_dimensionid, explode_pos_x, explode_pos_y, explode_pos_z);
-		}
-		
-	}	explode_flag = 0, explode_power = 0, explode_dimensionid = 0, explode_pos_x = 0, explode_pos_y = 0, explode_pos_z = 0;
-	return original(_this, dmsg, a3, a4, a5);				  
+		Log::Player::OnLevelExplode("", it->getNameTag()->c_str(), it->getDimensionId(), it->getPos()->x, it->getPos()->y, it->getPos()->z, u8" 引爆位于 ", a5, a3->getDimensionId(), a3->getPos()->x, a3->getPos()->y, a3->getPos()->z);
+	}
+	return original(_this, bs, a3, pos, a5, a6, a7, a8, a9);
 }
 
 void init() 
