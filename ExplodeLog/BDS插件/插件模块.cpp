@@ -94,9 +94,7 @@ namespace Log
 				}
 			}	
 		}
-
 	}
-
 }
 
 THook(bool, MSSYM_B1QA7explodeB1AA5LevelB2AAE20UEAAXAEAVBlockSourceB2AAA9PEAVActorB2AAA8AEBVVec3B2AAA1MB1UA4N3M3B1AA1Z, Level* _this, BlockSource* bs, Actor* a3, Vec3 pos, float a5, bool a6, bool a7, float a8, bool a9)
